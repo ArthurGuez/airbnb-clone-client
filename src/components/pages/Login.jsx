@@ -23,28 +23,42 @@ export const Login = () => {
   };
 
   const handleFormSubmit = async (event) => {
+    console.log(data);
     event.preventDefault();
     setData({
       ...data,
       isSubmitting: true,
       errorMessage: null,
     });
-
-    const res = await axios('/api/signin', {
-      method: 'post',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        email: data.email,
-        password: data.password,
-      }),
-    });
+    try {
+      const res = await axios.post(`http://localhost:8080/api/signin`, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: data.email,
+          password: data.password,
+        }),
+      });
+      if (res.ok) {
+        return dispatch({
+          type: 'LOGIN',
+          payload: res,
+        });
+      }
+      throw res;
+    } catch (error) {
+      return setData({
+        ...data,
+        isSubmitting: false,
+        errorMessage: error.message || error.statusText,
+      });
+    }
   };
 
   return (
     <div className="login">
-      <form className="login__form">
+      <form className="login__form" onSubmit={handleFormSubmit}>
         <label htmlFor="email">
           <input
             type="text"
@@ -52,7 +66,7 @@ export const Login = () => {
             onChange={handleInputChange}
             name="email"
             id="email"
-            placeHolder="Adresse e-mail"
+            placeholder="Adresse e-mail"
           />
         </label>
         <label htmlFor="password">
@@ -62,13 +76,13 @@ export const Login = () => {
             onChange={handleInputChange}
             name="password"
             id="password"
-            placeHolder="Mot de passe"
+            placeholder="Mot de passe"
           />
         </label>
 
         {data.errorMessage && <span className="form__error">{data.errorMessage}</span>}
 
-        <button type="button" disabled={data.isSubmitting}>
+        <button type="submit" disabled={data.isSubmitting}>
           {data.isSubmitting ? 'Authentification...' : 'Se connecter'}
         </button>
       </form>
