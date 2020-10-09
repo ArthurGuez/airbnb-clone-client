@@ -1,4 +1,5 @@
-import React, { useReducer } from 'react';
+import React, { useReducer, useContext, useEffect } from 'react';
+import axios from 'axios';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { BreakpointProvider } from 'react-socks';
 import { AuthContext } from './context/auth';
@@ -20,12 +21,18 @@ import Profil from './components/pages/Profil';
 
 import './App.scss';
 
+const API = process.env.REACT_APP_API;
+
+// const { dispatch } = useContext(AuthContext);
+
 const initialState = {
-  isAuthenticated: !!localStorage.getItem('token'),
-  token: localStorage.getItem('token') || {},
+  isAuthenticated: false,
+  token: {},
+  user: null,
 };
 
 const reducer = (state, action) => {
+  console.log(action.payload);
   switch (action.type) {
     case 'LOGIN':
       localStorage.setItem('token', action.payload.data.token);
@@ -41,6 +48,12 @@ const reducer = (state, action) => {
         isAuthenticated: false,
         token: null,
       };
+    case 'LOAD_USER':
+      return {
+        ...state,
+        isAuthenticated: true,
+        user: action.payload.user,
+      };
     default:
       return state;
   }
@@ -48,6 +61,27 @@ const reducer = (state, action) => {
 
 function App() {
   const [state, dispatch] = useReducer(reducer, initialState);
+
+  useEffect(() => {
+    const checkUser = async () => {
+      const token = localStorage.getItem('token');
+      if (token) {
+        const user = await axios.get(`${API}/me`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (user.status === 200) {
+          dispatch({
+            type: 'LOAD_USER',
+            payload: user,
+          });
+        }
+      }
+    };
+
+    checkUser();
+  }, []);
 
   return (
     <AuthContext.Provider
