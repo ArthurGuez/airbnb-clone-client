@@ -23,50 +23,22 @@ import './App.scss';
 
 const API = process.env.REACT_APP_API;
 
-// const { dispatch } = useContext(AuthContext);
-
-const initialState = {
-  isAuthenticated: false,
-  token: {},
-  user: null,
-};
-
-const reducer = (state, action) => {
-  console.log(action.payload);
-  switch (action.type) {
-    case 'LOGIN':
-      localStorage.setItem('token', action.payload.data.token);
-      return {
-        ...state,
-        isAuthenticated: true,
-        token: action.payload.data.token,
-      };
-    case 'LOGOUT':
-      localStorage.clear();
-      return {
-        ...state,
-        isAuthenticated: false,
-        token: null,
-      };
-    case 'LOAD_USER':
-      return {
-        ...state,
-        isAuthenticated: true,
-        user: action.payload.user,
-      };
-    default:
-      return state;
-  }
-};
-
 function App() {
+  const initialState = {
+    isAuthenticated: false,
+    token: localStorage.getItem('token'),
+    user: null,
+    isFetching: true,
+  };
+
   const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
-    const checkUser = async () => {
+    const fetchUser = async () => {
       const token = localStorage.getItem('token');
+
       if (token) {
-        const user = await axios.get(`${API}/me`, {
+        const res = await axios.get(`${API}/me`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -74,13 +46,17 @@ function App() {
         if (user.status === 200) {
           dispatch({
             type: 'LOAD_USER',
-            payload: user,
+            token,
           });
         }
+      } else {
+        dispatch({
+          type: 'NO_USER',
+        });
       }
     };
 
-    checkUser();
+    fetchUser();
   }, []);
 
   return (
