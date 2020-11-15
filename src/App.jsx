@@ -38,15 +38,21 @@ function App() {
       const token = localStorage.getItem('token');
 
       if (token) {
-        const res = await axios.get(`${API}/me`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        if (user.status === 200) {
+        try {
+          const res = await axios.get(`${API}/me`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          if (res.status === 200) {
+            dispatch({
+              type: 'LOAD_USER',
+              token,
+            });
+          }
+        } catch (error) {
           dispatch({
-            type: 'LOAD_USER',
-            token,
+            type: 'LOGOUT',
           });
         }
       } else {
