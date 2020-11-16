@@ -9,7 +9,7 @@ const reducer = (state, action) => {
         isFetching: false,
       };
     case 'LOGOUT':
-      localStorage.clear();
+      localStorage.removeItem('token');
       return {
         ...state,
         isAuthenticated: false,

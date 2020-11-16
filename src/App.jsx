@@ -1,7 +1,9 @@
-import React, { useReducer, useContext, useEffect } from 'react';
+import React, { useReducer, useEffect } from 'react';
 import axios from 'axios';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { BreakpointProvider } from 'react-socks';
+
+import reducer from './reducer';
 import { AuthContext } from './context/auth';
 
 import Header from './components/Header';
@@ -83,7 +85,7 @@ function App() {
                 <Route exact path="/rooms/:id" component={Place} />
                 <Route exact path="/rooms/:id/reserver" component={Reserver} />
                 <Route exact path="/rooms/:id/booking" component={Booking} />
-                <Route state={state} exact path="/bookings" component={Bookings} />
+                <Route exact path="/bookings" component={Bookings} />
                 <Route exact path="/signup" component={Signup} />
                 <Route exact path="/login" component={Login} />
                 <Route exact path="/wishlists" component={Enregistres} />
