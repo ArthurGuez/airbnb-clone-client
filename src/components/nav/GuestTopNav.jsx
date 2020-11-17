@@ -3,7 +3,6 @@ import Modal from 'react-modal';
 import { Link } from 'react-router-dom';
 
 import ModalSignup from '../ModalSignup';
-import ModalLogin from '../ModalLogin';
 import worldIcon from '../../assets/images/icons/globe.svg';
 import unrollIcon from '../../assets/images/icons/unroll.svg';
 import listIcon from '../../assets/images/icons/list.svg';
@@ -116,24 +115,24 @@ function GuestTopNav({ openUser, setOpenUser, openCurLang, setOpenCurLang }) {
                   <strong>Inscription</strong>
                 </span>
               </Link>
-              <Modal
-                isOpen={modalIsOpen}
-                onRequestClose={() => setModalIsOpen(false)}
-                style={customStyles}
-              >
-                <button
-                  type="button"
-                  className="crossbtn"
-                  title="close modal"
-                  onClick={() => setModalIsOpen(false)}
-                >
-                  ✕
-                </button>
-                <ModalSignup />
-              </Modal>
             </li>
           </ul>
         ) : null}
+        <Modal
+          isOpen={modalIsOpen}
+          onRequestClose={() => setModalIsOpen(false)}
+          style={customStyles}
+        >
+          <button
+            type="button"
+            className="crossbtn"
+            title="close modal"
+            onClick={() => setModalIsOpen(false)}
+          >
+            ✕
+          </button>
+          <ModalSignup />
+        </Modal>
       </div>
     </nav>
   );
