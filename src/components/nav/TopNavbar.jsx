@@ -1,5 +1,4 @@
-import React, { useContext } from 'react';
-// import { Breakpoint } from 'react-socks';
+import React, { useContext, useState } from 'react';
 
 import { AuthContext } from '../../context/auth';
 
@@ -8,17 +7,29 @@ import GuestTopNav from './GuestTopNav';
 
 const TopNavbar = () => {
   const { state: authState } = useContext(AuthContext);
+  const [openUser, setOpenUser] = useState(false);
+  const [openCurLang, setOpenCurLang] = useState(false);
 
   if (authState.isAuthenticated) {
     return (
       <>
-        <LoggedTopNav />
+        <LoggedTopNav
+          openUser={openUser}
+          setOpenUser={setOpenUser}
+          openCurLang={openCurLang}
+          setOpenCurLang={setOpenCurLang}
+        />
       </>
     );
   }
   return (
     <>
-      <GuestTopNav />
+      <GuestTopNav
+        openUser={openUser}
+        setOpenUser={setOpenUser}
+        openCurLang={openCurLang}
+        setOpenCurLang={setOpenCurLang}
+      />
     </>
   );
 };
