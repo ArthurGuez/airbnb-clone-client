@@ -1,16 +1,35 @@
-import React, { useContext } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import React from 'react';
+
 import axios from 'axios';
 
-import { AuthContext } from '../context/auth';
+// React-Router
+import { Link, useHistory } from 'react-router-dom';
+
+// Redux
+import { useDispatch } from 'react-redux';
+import { login } from '../Redux/slices/authenticationSlice';
+
 import useForm from './useForm';
 import validate from './validators/ValidateLogin';
 
 const API = process.env.REACT_APP_API;
 
+const initialState = {
+  email: '',
+  password: '',
+  isSubmitting: false,
+  errorMessage: null,
+};
+
 const LoginForm = () => {
-  const { dispatch } = useContext(AuthContext);
-  const { handleInputChange, handleFormSubmit, data, setData, errors } = useForm(submit, validate);
+  const dispatch = useDispatch();
+
+  const { handleChange, handleSubmit, data, setData, errors } = useForm(
+    initialState,
+    submit,
+    validate
+  );
+
   const history = useHistory();
 
   async function submit() {
@@ -20,10 +39,8 @@ const LoginForm = () => {
         password: data.password,
       });
       if (res.status === 200) {
-        dispatch({
-          type: 'LOGIN',
-          payload: res,
-        });
+        console.log(res);
+        dispatch(login(res.data));
         history.push('/');
         return;
       }
@@ -41,12 +58,12 @@ const LoginForm = () => {
     <div className="login">
       <div className="login__container">
         <h1 className="login__title">Connexion</h1>
-        <form className="login__form" onSubmit={handleFormSubmit} noValidate>
+        <form className="login__form" onSubmit={handleSubmit} noValidate>
           <label htmlFor="email">
             <input
               type="email"
               value={data.email}
-              onChange={handleInputChange}
+              onChange={handleChange}
               name="email"
               id="email"
               placeholder="E-mail"
@@ -59,7 +76,7 @@ const LoginForm = () => {
             <input
               type="password"
               value={data.password}
-              onChange={handleInputChange}
+              onChange={handleChange}
               name="password"
               id="password"
               placeholder="Mot de passe"

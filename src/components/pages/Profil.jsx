@@ -1,16 +1,17 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { AuthContext } from '../../context/auth';
+// Redux
+import { useDispatch } from 'react-redux';
+import { logout } from '../../Redux/slices/authenticationSlice';
 
 function Profil() {
-  const { dispatch } = useContext(AuthContext);
+  const dispatch = useDispatch();
+
   const history = useHistory();
   const logOut = async (event) => {
     event.preventDefault();
-    dispatch({
-      type: 'LOGOUT',
-    });
+    dispatch(logout());
     history.push('/');
   };
   return (

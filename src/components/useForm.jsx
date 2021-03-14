@@ -1,20 +1,10 @@
 import { useState, useEffect } from 'react';
 
 const useForm = (cb, validate) => {
-  const initialState = {
-    role: '',
-    first_name: '',
-    last_name: '',
-    email: '',
-    password: '',
-    isSubmitting: false,
-    errorMessage: null,
-  };
-
   const [data, setData] = useState(initialState);
   const [errors, setErrors] = useState({});
 
-  const handleInputChange = (event) => {
+  const handleChange = (event) => {
     const { name, value } = event.target;
     setData({
       ...data,
@@ -22,7 +12,7 @@ const useForm = (cb, validate) => {
     });
   };
 
-  const handleFormSubmit = (event) => {
+  const handleSubmit = (event) => {
     event.preventDefault();
     setData({
       ...data,
@@ -44,8 +34,8 @@ const useForm = (cb, validate) => {
   }, [errors]);
 
   return {
-    handleInputChange,
-    handleFormSubmit,
+    handleChange,
+    handleSubmit,
     data,
     errors,
     setData,

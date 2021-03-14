@@ -1,10 +1,12 @@
-import React, { useReducer, useEffect } from 'react';
+import React, { useEffect } from 'react';
+
 import axios from 'axios';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { BreakpointProvider } from 'react-socks';
 
-import reducer from './reducer';
-import { AuthContext } from './context/auth';
+// Redux
+import { useDispatch } from 'react-redux';
+import { logout, loadUser, noUser } from './Redux/slices/authenticationSlice';
 
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -26,14 +28,7 @@ import './App.scss';
 const API = process.env.REACT_APP_API;
 
 function App() {
-  const initialState = {
-    isAuthenticated: false,
-    token: localStorage.getItem('token'),
-    user: null,
-    isFetching: true,
-  };
-
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -47,58 +42,43 @@ function App() {
             },
           });
           if (res.status === 200) {
-            dispatch({
-              type: 'LOAD_USER',
-              token,
-            });
+            dispatch(loadUser(token));
           }
         } catch (error) {
-          dispatch({
-            type: 'LOGOUT',
-          });
+          dispatch(logout());
         }
       } else {
-        dispatch({
-          type: 'NO_USER',
-        });
+        dispatch(noUser());
       }
     };
-
     fetchUser();
   }, []);
 
   return (
-    <AuthContext.Provider
-      value={{
-        state,
-        dispatch,
-      }}
-    >
-      <BreakpointProvider>
-        <div className="App">
-          <Header />
-          <Router>
-            <>
-              <BottomNav />
-              <Switch>
-                <Route exact path="/" component={Places} />
-                <Route exact path="/rooms/:id" component={Place} />
-                <Route exact path="/rooms/:id/reserver" component={Reserver} />
-                <Route exact path="/rooms/:id/booking" component={Booking} />
-                <Route exact path="/bookings" component={Bookings} />
-                <Route exact path="/signup" component={Signup} />
-                <Route exact path="/login" component={Login} />
-                <Route exact path="/wishlists" component={Enregistres} />
-                <Route exact path="/inbox" component={Messages} />
-                <Route exact path="/account-settings" component={Profil} />
-              </Switch>
-            </>
-          </Router>
+    <BreakpointProvider>
+      <div className="App">
+        <Header />
+        <Router>
+          <>
+            <BottomNav />
+            <Switch>
+              <Route exact path="/" component={Places} />
+              <Route exact path="/rooms/:id" component={Place} />
+              <Route exact path="/rooms/:id/reserver" component={Reserver} />
+              <Route exact path="/rooms/:id/booking" component={Booking} />
+              <Route exact path="/bookings" component={Bookings} />
+              <Route exact path="/signup" component={Signup} />
+              <Route exact path="/login" component={Login} />
+              <Route exact path="/wishlists" component={Enregistres} />
+              <Route exact path="/inbox" component={Messages} />
+              <Route exact path="/account-settings" component={Profil} />
+            </Switch>
+          </>
+        </Router>
 
-          <Footer />
-        </div>
-      </BreakpointProvider>
-    </AuthContext.Provider>
+        <Footer />
+      </div>
+    </BreakpointProvider>
   );
 }
 

@@ -1,35 +1,35 @@
-import React, { useContext } from 'react';
+import React from 'react';
+
+// Redux
+import { useSelector } from 'react-redux';
+import { selectAuthStatus } from '../../Redux/slices/authenticationSlice';
+
 import { Breakpoint } from 'react-socks';
 
-import { AuthContext } from '../../context/auth';
-
+// Components
 import LoggedBottomNav from './LoggedBottomNav';
 import GuestBottomNav from './GuestBottomNav';
 
 const BottomNav = () => {
-  const { state: authState } = useContext(AuthContext);
+  const authStatus = useSelector(selectAuthStatus);
 
-  if (authState.isAuthenticated) {
+  if (authStatus.isAuthenticated) {
     return (
-      <>
-        <nav className="nav-wrapper">
-          <Breakpoint small down>
-            <LoggedBottomNav />
-          </Breakpoint>
-          <Breakpoint medium up />
-        </nav>
-      </>
-    );
-  }
-  return (
-    <>
       <nav className="nav-wrapper">
         <Breakpoint small down>
-          <GuestBottomNav />
+          <LoggedBottomNav />
         </Breakpoint>
         <Breakpoint medium up />
       </nav>
-    </>
+    );
+  }
+  return (
+    <nav className="nav-wrapper">
+      <Breakpoint small down>
+        <GuestBottomNav />
+      </Breakpoint>
+      <Breakpoint medium up />
+    </nav>
   );
 };
 

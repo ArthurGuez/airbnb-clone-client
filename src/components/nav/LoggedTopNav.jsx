@@ -1,21 +1,22 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { AuthContext } from '../../context/auth';
+// Redux
+import { useDispatch } from 'react-redux';
+import { logout } from '../../Redux/slices/authenticationSlice';
 
 import worldIcon from '../../assets/images/icons/globe.svg';
 import unrollIcon from '../../assets/images/icons/unroll.svg';
 import listIcon from '../../assets/images/icons/list.svg';
 
 const LoggedTopNav = ({ openUser, setOpenUser, openCurLang, setOpenCurLang }) => {
-  const { dispatch } = useContext(AuthContext);
+  const dispatch = useDispatch();
+
   const history = useHistory();
 
   const logOut = async (event) => {
     event.preventDefault();
-    dispatch({
-      type: 'LOGOUT',
-    });
+    dispatch(logout());
     history.push('/');
   };
 

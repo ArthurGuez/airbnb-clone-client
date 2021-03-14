@@ -7,15 +7,25 @@ import validate from './validators/ValidateSignup';
 
 const API = process.env.REACT_APP_API;
 
+const initialState = {
+  role: '',
+  firstName: '',
+  lastName: '',
+  email: '',
+  password: '',
+  isSubmitting: false,
+  errorMessage: null,
+};
+
 const SignupForm = () => {
-  const { handleInputChange, handleFormSubmit, data, errors } = useForm(submit, validate);
+  const { handleChange, handleSubmit, data, errors } = useForm(initialState, submit, validate);
   const history = useHistory();
   async function submit() {
     try {
       const res = await axios.post(`${API}/signup`, {
         role: data.role,
-        first_name: data.first_name,
-        last_name: data.last_name,
+        firstName: data.firstName,
+        lastName: data.lastName,
         email: data.email,
         password: data.password,
       });
@@ -31,7 +41,7 @@ const SignupForm = () => {
     <div className="signup">
       <h1>Effectuer mon inscription</h1>
       <form
-        onSubmit={handleFormSubmit}
+        onSubmit={handleSubmit}
         noValidate
         method="POST"
         action={`${API}/signup`}
@@ -46,7 +56,7 @@ const SignupForm = () => {
                 name="role"
                 id="Host"
                 className="signup__input--host"
-                onChange={handleInputChange}
+                onChange={handleChange}
                 value="host"
               />
             </label>
@@ -59,7 +69,7 @@ const SignupForm = () => {
                 name="role"
                 id="Tourist"
                 className="signup__input--tourist"
-                onChange={handleInputChange}
+                onChange={handleChange}
                 value="tourist"
               />
             </label>
@@ -68,31 +78,31 @@ const SignupForm = () => {
         <div className="signup__input-name">
           <input
             type="text"
-            name="first_name"
+            name="firstName"
             placeholder="Prénom"
-            onChange={handleInputChange}
+            onChange={handleChange}
             value={data.firstName}
             className="signup__input-firstname"
           />
           <input
             type="text"
-            name="last_name"
+            name="lastName"
             placeholder="Nom"
-            onChange={handleInputChange}
+            onChange={handleChange}
             value={data.lastName}
             className="signup__input-lastname"
           />
           <p className="signup__input-comment">
             Assurez-vous qu'il correspond au nom figurant sur votre pièce d'identité.
           </p>
-          {errors.first_name && <p className="error">{errors.first_name}</p>}
+          {errors.firstName && <p className="error">{errors.firstName}</p>}
         </div>
         <div className="signup__input-boxes">
           <input
             type="email"
             name="email"
             placeholder="Adresse e-mail"
-            onChange={handleInputChange}
+            onChange={handleChange}
             value={data.email}
           />
           {errors.email && <p className="error">{errors.email}</p>}
@@ -103,7 +113,7 @@ const SignupForm = () => {
             type="password"
             name="password"
             placeholder="Mot de passe"
-            onChange={handleInputChange}
+            onChange={handleChange}
             value={data.password}
           />
           {errors.password && <p className="error">{errors.password}</p>}

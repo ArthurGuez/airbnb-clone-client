@@ -2,26 +2,30 @@ import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import Moment from 'react-moment';
 
-import { AuthContext } from '../../context/auth';
+// Redux
+import { useSelector } from 'react-redux';
+import { selectAuthStatus } from '../../Redux/slices/authenticationSlice';
+
 import photoPlace from '../../assets/images/photoPlace.jpg';
 import { ReactComponent as FlashDroit } from '../../assets/images/icons/flash-droit.svg';
 
 const API = process.env.REACT_APP_API;
 
 const Bookings = () => {
-  const { state: authState } = useContext(AuthContext);
+  const authStatus = useSelector(selectAuthStatus);
+
   const [bookings, setBookings] = useState([]);
 
   useEffect(() => {
     const fetchBookings = async () => {
       const getBookings = await axios(`${API}/bookings`, {
-        headers: { Authorization: `Bearer ${authState.token}` },
+        headers: { Authorization: `Bearer ${authStatus.token}` },
       });
 
       setBookings(getBookings.data);
     };
     fetchBookings();
-  }, [authState]);
+  }, [authStatus]);
   return (
     <>
       <div className="bookings">

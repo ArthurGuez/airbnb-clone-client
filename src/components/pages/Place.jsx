@@ -1,9 +1,13 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import Modal from 'react-modal';
 import { Link, useParams } from 'react-router-dom';
 import axios from 'axios';
+
+// Redux
+import { useSelector } from 'react-redux';
+import { selectAuthStatus } from '../../Redux/slices/authenticationSlice';
+
 import { Breakpoint } from 'react-socks';
-import { AuthContext } from '../../context/auth';
 
 import Reserver from './Reserver';
 
@@ -24,7 +28,7 @@ const customStyles = {
 Modal.setAppElement('#root');
 
 const Place = () => {
-  const { state: authState } = useContext(AuthContext);
+  const authStatus = useSelector(selectAuthStatus);
 
   const { id } = useParams();
 
@@ -43,7 +47,7 @@ const Place = () => {
     fetchPlace();
   }, [id]);
 
-  if (authState.isAuthenticated) {
+  if (authStatus.isAuthenticated) {
     return (
       <>
         <Breakpoint small down>

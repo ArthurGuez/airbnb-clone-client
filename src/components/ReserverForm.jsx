@@ -3,9 +3,14 @@ import { useParams, useHistory } from 'react-router-dom';
 import axios from 'axios';
 import Moment from 'moment';
 
-import { AuthContext } from '../context/auth';
+// Redux
+import { useSelector } from 'react-redux';
+import { selectAuthStatus } from '../Redux/slices/authenticationSlice';
+
 import useReserverForm from './useReserverForm';
 import validate from './validators/ValidateReserver';
+
+// SVGs
 import { ReactComponent as FlashBas } from '../assets/images/icons/flash-bas.svg';
 import { ReactComponent as Question } from '../assets/images/icons/question.svg';
 import { ReactComponent as Croix } from '../assets/images/icons/croix.svg';
@@ -13,7 +18,8 @@ import { ReactComponent as Croix } from '../assets/images/icons/croix.svg';
 const API = process.env.REACT_APP_API;
 
 const ReserverForm = (callback) => {
-  const { state: authState } = useContext(AuthContext);
+  const authStatus = useSelector(selectAuthStatus);
+
   const { id } = useParams();
   const [place, setPlace] = useState('');
 
@@ -49,7 +55,7 @@ const ReserverForm = (callback) => {
           check_out: Moment(data.check_out).utc().format('YYYY-MM-DDTHH:mm:ss.SSS') + 'Z',
         },
         {
-          headers: { Authorization: `Bearer ${authState.token}` },
+          headers: { Authorization: `Bearer ${authStatus.token}` },
         }
       );
       if (res) {
