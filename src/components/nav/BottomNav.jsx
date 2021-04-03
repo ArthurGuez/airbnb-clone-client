@@ -1,10 +1,10 @@
 import React from 'react';
 
+import { Breakpoint } from 'react-socks';
+
 // Redux
 import { useSelector } from 'react-redux';
 import { selectAuthStatus } from '../../Redux/slices/authenticationSlice';
-
-import { Breakpoint } from 'react-socks';
 
 // Components
 import LoggedBottomNav from './LoggedBottomNav';

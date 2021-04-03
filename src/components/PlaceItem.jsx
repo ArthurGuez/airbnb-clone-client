@@ -1,17 +1,17 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const PlaceItem = (props) => {
+const PlaceItem = ({ place }) => {
   const {
     id,
     name,
     city,
-    max_guests,
+    max_guests: maxGuests,
     rooms,
     bathrooms,
     image,
     price_by_night: priceByNight,
-  } = props.place;
+  } = place;
   // console.log(props.place)
 
   // PlaceItem.propTypes = {
@@ -28,7 +28,7 @@ const PlaceItem = (props) => {
         </p>
         <p className="place__moreinfos">
           {' '}
-          {max_guests} pers. max ∙ {rooms} chambres ∙ {bathrooms} salles de bain
+          {maxGuests} pers. max ∙ {rooms} chambres ∙ {bathrooms} salles de bain
         </p>
         <p className="place__price-night"> {priceByNight}€/nuit </p>
         <p className="place__price-month"> {priceByNight * 30}€ pour un mois </p>

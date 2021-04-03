@@ -1,57 +1,54 @@
-import React from 'react';
-
-import axios from 'axios';
+import React, { useState } from 'react';
 
 // React-Router
 import { Link, useHistory } from 'react-router-dom';
 
 // Redux
 import { useDispatch } from 'react-redux';
-import { login } from '../Redux/slices/authenticationSlice';
+import { fetchUser } from '../Redux/slices/authenticationSlice';
 
 import useForm from './useForm';
 import validate from './validators/ValidateLogin';
 
-const API = process.env.REACT_APP_API;
-
 const initialState = {
   email: '',
   password: '',
-  isSubmitting: false,
-  errorMessage: null,
 };
 
 const LoginForm = () => {
   const dispatch = useDispatch();
 
-  const { handleChange, handleSubmit, data, setData, errors } = useForm(
-    initialState,
-    submit,
-    validate
-  );
-
   const history = useHistory();
 
+  const { handleChange, handleSubmit, data, setData, errors } = useForm(
+    initialState,
+    validate,
+    submit
+  );
+
+  // Témoin soumission formulaire
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   async function submit() {
-    try {
-      const res = await axios.post(`${API}/signin`, {
-        email: data.email,
-        password: data.password,
-      });
-      if (res.status === 200) {
-        console.log(res);
-        dispatch(login(res.data));
-        history.push('/');
-        return;
-      }
-      throw res;
-    } catch (error) {
-      setData({
-        ...data,
-        isSubmitting: false,
-        errorMessage: error.message,
-      });
-    }
+    setIsSubmitting(true);
+    dispatch(fetchUser(data.email, data.password));
+    setIsSubmitting(false);
+
+    // try {
+    //   const res = await axios.post(`${API}/signin`, {
+    //     email: data.email,
+    //     password: data.password,
+    //   });
+    //   if (res.status === 200) {
+    //     dispatch(login(res.data));
+    //     history.push('/');
+    //   }
+    // } catch (error) {
+    //   setData({
+    //     ...data,
+    //     serverError: error.response.data.description,
+    //   });
+    // }
   }
 
   return (
@@ -85,13 +82,14 @@ const LoginForm = () => {
           </label>
 
           {errors.password && <p className="form__error">{errors.password}</p>}
+          {data.serverError && <p className="form__error">{data.serverError}</p>}
 
-          <button type="submit" disabled={data.isSubmitting} className="form__submit">
+          <button type="submit" disabled={isSubmitting} className="form__submit">
             Se connecter
           </button>
         </form>
         <div className="login__redirection">
-          <p>Vous n'avez pas de compte ?</p>
+          <p>Vous n&apos;avez pas de compte ?</p>
           <Link to="/signup">
             <button type="button" className="redirection__button">
               Inscription

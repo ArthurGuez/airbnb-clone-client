@@ -51,8 +51,8 @@ const ReserverForm = (callback) => {
         `${API}/bookings`,
         {
           place_id: id,
-          check_in: Moment(data.check_in).utc().format('YYYY-MM-DDTHH:mm:ss.SSS') + 'Z',
-          check_out: Moment(data.check_out).utc().format('YYYY-MM-DDTHH:mm:ss.SSS') + 'Z',
+          check_in: `${Moment(data.check_in).utc().format('YYYY-MM-DDTHH:mm:ss.SSS')}Z`,
+          check_out: `${Moment(data.check_out).utc().format('YYYY-MM-DDTHH:mm:ss.SSS')}Z`,
         },
         {
           headers: { Authorization: `Bearer ${authStatus.token}` },

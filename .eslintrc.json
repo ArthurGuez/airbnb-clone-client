@@ -2,7 +2,10 @@
   "extends": ["eslint:recommended", "airbnb", "prettier", "react-app", "plugin:react/recommended"],
   "plugins": ["prettier"],
   "rules": {
-    "prettier/prettier": "error",
+    "react/no-unescaped-entities": "warn",
+    "react/prop-types": "warn",
+    "react/jsx-one-expression-per-line": "warn",
+    "prettier/prettier": "warn",
     "no-unused-vars": "warn",
     "no-console": "off",
     "func-names": "off"

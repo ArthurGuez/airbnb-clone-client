@@ -2,12 +2,11 @@ import React, { useState, useEffect } from 'react';
 import Modal from 'react-modal';
 import { Link, useParams } from 'react-router-dom';
 import axios from 'axios';
+import { Breakpoint } from 'react-socks';
 
 // Redux
 import { useSelector } from 'react-redux';
 import { selectAuthStatus } from '../../Redux/slices/authenticationSlice';
-
-import { Breakpoint } from 'react-socks';
 
 import Reserver from './Reserver';
 
@@ -34,7 +33,15 @@ const Place = () => {
 
   const [place, setPlace] = useState('');
 
-  const { name, city, max_guests, rooms, bathrooms, image, price_by_night: priceByNight } = place;
+  const {
+    name,
+    city,
+    max_guests: maxGuests,
+    rooms,
+    bathrooms,
+    image,
+    price_by_night: priceByNight,
+  } = place;
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
@@ -64,7 +71,7 @@ const Place = () => {
               <h1>{name}</h1>
               <p className="place__container-info-city">{city}</p>
               <p className="place__container-info-moreinfos">
-                {max_guests} pers. max ∙ {rooms} chambres ∙ {bathrooms} salles de bain
+                {maxGuests} pers. max ∙ {rooms} chambres ∙ {bathrooms} salles de bain
               </p>
               <p className="container-info-city-night"> {priceByNight}€/nuit </p>
               <p className="container-info-city-month"> {priceByNight * 30}€ pour un mois </p>
@@ -91,7 +98,7 @@ const Place = () => {
               <p className="place__container-info-city">{city}</p>
               <p className="place__container-info-moreinfos">
                 {' '}
-                {max_guests} pers. max ∙ {rooms} chambres ∙ {bathrooms} salles de bain
+                {maxGuests} pers. max ∙ {rooms} chambres ∙ {bathrooms} salles de bain
               </p>
               <p className="container-info-city-night"> {priceByNight}€/nuit </p>
               <p className="container-info-city-month"> {priceByNight * 30}€ pour un mois </p>
@@ -135,7 +142,7 @@ const Place = () => {
             <h1>{name}</h1>
             <p className="place__container-info-city">{city}</p>
             <p className="place__container-info-moreinfos">
-              {max_guests} pers. max ∙ {rooms} chambres ∙ {bathrooms} salles de bain
+              {maxGuests} pers. max ∙ {rooms} chambres ∙ {bathrooms} salles de bain
             </p>
             <p className="container-info-city-night"> {priceByNight}€/nuit </p>
             <p className="container-info-city-month"> {priceByNight * 30}€ pour un mois </p>
@@ -162,7 +169,7 @@ const Place = () => {
             <p className="place__container-info-city">{city}</p>
             <p className="place__container-info-moreinfos">
               {' '}
-              {max_guests} pers. max ∙ {rooms} chambres ∙ {bathrooms} salles de bain
+              {maxGuests} pers. max ∙ {rooms} chambres ∙ {bathrooms} salles de bain
             </p>
             <p className="container-info-city-night"> {priceByNight}€/nuit </p>
             <p className="container-info-city-month"> {priceByNight * 30}€ pour un mois </p>

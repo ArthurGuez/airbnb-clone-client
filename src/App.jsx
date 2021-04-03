@@ -52,28 +52,26 @@ function App() {
       }
     };
     fetchUser();
-  }, []);
+  });
 
   return (
     <BreakpointProvider>
       <div className="App">
         <Header />
         <Router>
-          <>
-            <BottomNav />
-            <Switch>
-              <Route exact path="/" component={Places} />
-              <Route exact path="/rooms/:id" component={Place} />
-              <Route exact path="/rooms/:id/reserver" component={Reserver} />
-              <Route exact path="/rooms/:id/booking" component={Booking} />
-              <Route exact path="/bookings" component={Bookings} />
-              <Route exact path="/signup" component={Signup} />
-              <Route exact path="/login" component={Login} />
-              <Route exact path="/wishlists" component={Enregistres} />
-              <Route exact path="/inbox" component={Messages} />
-              <Route exact path="/account-settings" component={Profil} />
-            </Switch>
-          </>
+          <BottomNav />
+          <Switch>
+            <Route exact path="/" component={Places} />
+            <Route exact path="/rooms/:id" component={Place} />
+            <Route exact path="/rooms/:id/reserver" component={Reserver} />
+            <Route exact path="/rooms/:id/booking" component={Booking} />
+            <Route exact path="/bookings" component={Bookings} />
+            <Route exact path="/signup" component={Signup} />
+            <Route exact path="/login" component={Login} />
+            <Route exact path="/wishlists" component={Enregistres} />
+            <Route exact path="/inbox" component={Messages} />
+            <Route exact path="/account-settings" component={Profil} />
+          </Switch>
         </Router>
 
         <Footer />
