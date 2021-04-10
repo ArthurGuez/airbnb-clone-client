@@ -4,8 +4,9 @@ import React, { useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 
 // Redux
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { fetchUser } from '../Redux/slices/authenticationSlice';
+import { selectError } from '../Redux/slices/errorSlice';
 
 import useForm from './useForm';
 import validate from './validators/ValidateLogin';
@@ -17,38 +18,19 @@ const initialState = {
 
 const LoginForm = () => {
   const dispatch = useDispatch();
+  const serverError = useSelector(selectError);
 
   const history = useHistory();
 
-  const { handleChange, handleSubmit, data, setData, errors } = useForm(
-    initialState,
-    validate,
-    submit
-  );
+  const { handleChange, handleSubmit, data, errors } = useForm(initialState, validate, submit);
 
   // Témoin soumission formulaire
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   async function submit() {
     setIsSubmitting(true);
-    dispatch(fetchUser(data.email, data.password));
+    dispatch(fetchUser(data.email, data.password, history));
     setIsSubmitting(false);
-
-    // try {
-    //   const res = await axios.post(`${API}/signin`, {
-    //     email: data.email,
-    //     password: data.password,
-    //   });
-    //   if (res.status === 200) {
-    //     dispatch(login(res.data));
-    //     history.push('/');
-    //   }
-    // } catch (error) {
-    //   setData({
-    //     ...data,
-    //     serverError: error.response.data.description,
-    //   });
-    // }
   }
 
   return (
@@ -82,7 +64,7 @@ const LoginForm = () => {
           </label>
 
           {errors.password && <p className="form__error">{errors.password}</p>}
-          {data.serverError && <p className="form__error">{data.serverError}</p>}
+          {serverError && <p className="form__error">{serverError}</p>}
 
           <button type="submit" disabled={isSubmitting} className="form__submit">
             Se connecter

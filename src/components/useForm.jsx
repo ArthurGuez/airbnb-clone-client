@@ -23,7 +23,6 @@ const useForm = (initialState, validate, callback) => {
     handleChange,
     handleSubmit,
     data,
-    setData,
     errors,
   };
 };

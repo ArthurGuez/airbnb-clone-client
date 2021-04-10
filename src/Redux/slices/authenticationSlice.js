@@ -1,20 +1,24 @@
-import axios from 'axios';
-
-const API = process.env.REACT_APP_API;
+import { loginUser } from '../../api';
+import { setError } from './errorSlice';
 
 const initialState = {
   isAuthenticated: false,
   token: localStorage.getItem('token'),
   user: null,
-  isFetching: false,
+  isLoading: false,
 };
 
 export const authenticationReducer = (state = initialState, action) => {
   switch (action.type) {
-    case 'authentication/fetch':
+    case 'authentication/requestPending':
       return {
         ...state,
-        isFetching: true,
+        isLoading: true,
+      };
+    case 'authentication/requestFailed':
+      return {
+        ...state,
+        isLoading: false,
       };
     case 'authentication/login':
       localStorage.setItem('token', action.token);
@@ -23,7 +27,7 @@ export const authenticationReducer = (state = initialState, action) => {
         isAuthenticated: true,
         token: action.token,
         user: action.user,
-        isFetching: false,
+        isLoading: false,
       };
     case 'authentication/logout':
       localStorage.removeItem('token');
@@ -31,21 +35,21 @@ export const authenticationReducer = (state = initialState, action) => {
         ...state,
         isAuthenticated: false,
         token: null,
-        isFetching: false,
+        isLoading: false,
       };
     case 'authentication/loadUser':
       return {
         ...state,
         isAuthenticated: true,
         token: action.payload,
-        isFetching: false,
+        isLoading: false,
       };
     case 'authentication/noUser':
       return {
         ...state,
         isAuthenticated: false,
         token: null,
-        isFetching: false,
+        isLoading: false,
       };
     default:
       return state;
@@ -53,9 +57,15 @@ export const authenticationReducer = (state = initialState, action) => {
 };
 
 // Action creators
-export function fetch() {
+export function requestPending() {
   return {
-    type: 'authentication/fetch',
+    type: 'authentication/requestPending',
+  };
+}
+
+export function requestFailed() {
+  return {
+    type: 'authentication/requestFailed',
   };
 }
 
@@ -86,20 +96,19 @@ export function noUser() {
   };
 }
 
-// Thunk functions
-export function fetchUser(email, password) {
+// Thunk action creators
+export function fetchUser(email, password, history) {
   return async (dispatch) => {
-    dispatch(fetch());
+    dispatch(requestPending());
     try {
-      const res = await axios.post(`${API}/signin`, {
-        email,
-        password,
-      });
+      const res = await loginUser(email, password);
       if (res.status === 200) {
         dispatch(login(res.data));
+        history.push('/');
       }
     } catch (error) {
-      console.log('to do');
+      dispatch(requestFailed());
+      dispatch(setError(error));
     }
   };
 }
