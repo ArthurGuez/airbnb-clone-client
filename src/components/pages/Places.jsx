@@ -1,22 +1,21 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useEffect } from 'react';
 import { Breakpoint } from 'react-socks';
+
+// Redux
+import { useDispatch, useSelector } from 'react-redux';
+import { loadPlaces, selectData } from '../../Redux/slices/placeSlice';
 
 import PlaceItem from '../PlaceItem';
 
-const API = process.env.REACT_APP_API;
-
 const Home = () => {
-  const [places, setPlaces] = useState([]);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    const fetchPlaces = async () => {
-      const res = await axios(`${API}/places/`);
+    dispatch(loadPlaces());
+  }, [dispatch]);
 
-      setPlaces(res.data);
-    };
-    fetchPlaces();
-  }, []);
+  const places = useSelector(selectData);
+
   return (
     <>
       <Breakpoint small down>

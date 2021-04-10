@@ -8,8 +8,5 @@ export const loginUser = (email, password) =>
     password,
   });
 
-export const getPlaces = async () => null;
-//   await axios.post(`${API}/signin`, {
-//     email,
-//     password,
-//   });
+export const fetchPlaces = () => axios.get(`${API}/places`);
+export const fetchPlace = (id) => axios.get(`${API}/place/${id}`);
